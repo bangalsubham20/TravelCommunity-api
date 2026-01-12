@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/trips/**").permitAll()
                         .requestMatchers("/api/reviews/trip/**").permitAll()
+                        .requestMatchers("/").permitAll() // Allow public access to home path
                         .anyRequest().authenticated())
                 .httpBasic(basic -> {
                 });
