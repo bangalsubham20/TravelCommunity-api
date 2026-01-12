@@ -12,11 +12,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.wravelcommunity</groupId>
-    <artifactId>wravelcommunity-api</artifactId>
+    <groupId>com.travelcommunity</groupId>
+    <artifactId>travelcommunity-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wravelcommunity-api</name>
-    <description>Wravel-Community Backend API</description>
+    <name>travelcommunity-api</name>
+    <description>Travel-Community Backend API</description>
 
     <properties>
         <java.version>21</java.version>
