@@ -12,11 +12,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.travelcommunity</groupId>
-    <artifactId>travelcommunity-api</artifactId>
+    <groupId>com.sundaysoul</groupId>
+    <artifactId>sundaysoul-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>travelcommunity-api</name>
-    <description>Travel-Community Backend API</description>
+    <name>sundaysoul-backend</name>
+    <description>SundaySoul Backend API</description>
 
     <properties>
         <java.version>21</java.version>
