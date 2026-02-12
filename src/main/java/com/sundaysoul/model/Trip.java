@@ -91,6 +91,7 @@ public class Trip {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Booking> bookings;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
