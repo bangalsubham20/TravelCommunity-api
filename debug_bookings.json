@@ -1,0 +1,63 @@
+{
+    "id":  1,
+    "user":  {
+                 "id":  1,
+                 "email":  "test3@example.com",
+                 "password":  "$2a$10$ovWQHYpg7IKL/p1PGoW/S.7FcV8ktu3yZFuXmBFT.oeBJIQc7l6L.",
+                 "fullName":  "Test User",
+                 "phone":  "1234567890",
+                 "bio":  "Adventure enthusiast! ??",
+                 "avatar":  "https://via.placeholder.com/150",
+                 "role":  "USER",
+                 "createdAt":  "2026-02-12T12:08:44.196038",
+                 "updatedAt":  "2026-02-12T12:08:44.196038"
+             },
+    "trip":  {
+                 "id":  1,
+                 "name":  "Mist of Munnar",
+                 "destination":  "Munnar, Kerala",
+                 "description":  "Experience the breathtaking tea gardens and misty hills of Munnar. A perfect getaway for nature lovers.",
+                 "price":  12999.0,
+                 "duration":  3,
+                 "startDate":  "2026-02-21T23:40:27.794425",
+                 "endDate":  "2026-02-24T23:40:27.794425",
+                 "groupSize":  15,
+                 "difficulty":  "Easy",
+                 "season":  "Winter",
+                 "altitude":  "1600m",
+                 "bestSeason":  "September to March",
+                 "availableSeats":  14,
+                 "image":  "https://images.unsplash.com/photo-1596328892468-12b7a9de281e?q=80\u0026w=2070\u0026auto=format\u0026fit=crop",
+                 "highlights":  "Tea Museum visit, Trekking to Top Station, Campfire night",
+                 "itinerary":  "Day 1: Arrival and Tea Museum. Day 2: Trekking. Day 3: Departure.",
+                 "inclusions":  "Accommodation, Meals, Guide",
+                 "exclusions":  "Travel to Munnar, Personal expenses",
+                 "rating":  0.0,
+                 "reviews":  0,
+                 "active":  true,
+                 "createdAt":  "2026-02-11T23:40:27.795421",
+                 "updatedAt":  "2026-02-12T23:15:24.711529",
+                 "tripReviews":  [
+
+                                 ]
+             },
+    "numTravelers":  1,
+    "totalPrice":  21150.0,
+    "status":  "PENDING",
+    "paymentMethod":  "full",
+    "travelers":  [
+                      {
+                          "id":  1,
+                          "fullName":  "Test User",
+                          "age":  25,
+                          "gender":  "male",
+                          "phone":  "1234567890",
+                          "email":  "test3@example.com",
+                          "emergencyContact":  "Mom",
+                          "dietaryRestrictions":  "none"
+                      }
+                  ],
+    "bookingDate":  "2026-02-12T12:10:19.007604",
+    "createdAt":  "2026-02-12T12:10:19.007604",
+    "updatedAt":  "2026-02-12T12:10:19.007604"
+}

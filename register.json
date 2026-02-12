@@ -1,6 +1,6 @@
 {
-  "email": "test_261@example.com",
-  "password": "password123",
-  "fullName": "Test User",
-  "phone": "9999999999"
+  "fullName": "Debug Admin V2",
+  "email": "debug_admin_v2@test.com",
+  "password": "validPassword123!",
+  "phone": "9876543210"
 }

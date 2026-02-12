@@ -1,0 +1,16 @@
+{
+    "name": "Debug Trip V1",
+    "destination": "Debug Land",
+    "description": "A trip for debugging",
+    "price": 100.0,
+    "duration": 2,
+    "startDate": "2026-03-01T10:00:00",
+    "endDate": "2026-03-03T10:00:00",
+    "groupSize": 5,
+    "difficulty": "Easy",
+    "image": "https://example.com/image.jpg",
+    "active": true,
+    "rating": 0.0,
+    "reviews": 0,
+    "availableSeats": 5
+}

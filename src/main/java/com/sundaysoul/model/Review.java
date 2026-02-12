@@ -17,6 +17,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Trip trip;
 
     @ManyToOne

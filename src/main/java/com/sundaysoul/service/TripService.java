@@ -132,7 +132,17 @@ public class TripService {
         trip.setPrice(tripDetails.getPrice());
         trip.setDuration(tripDetails.getDuration());
         trip.setDifficulty(tripDetails.getDifficulty());
-        trip.setAvailableSeats(tripDetails.getAvailableSeats());
+        trip.setGroupSize(tripDetails.getGroupSize()); // Added missing field update
+
+        // Recalculate available seats based on new group size and existing bookings
+        int bookedCount = 0;
+        if (trip.getBookings() != null) {
+            bookedCount = (int) trip.getBookings().stream()
+                    .filter(b -> b.getStatus() != com.sundaysoul.model.Booking.BookingStatus.CANCELLED)
+                    .count();
+        }
+        trip.setAvailableSeats(tripDetails.getGroupSize() - bookedCount);
+
         trip.setUpdatedAt(LocalDateTime.now());
 
         return tripRepository.save(trip);
