@@ -108,6 +108,21 @@ public class AuthService {
         return convertToUserDTO(user);
     }
 
+    // Get all users (Admin only)
+    public java.util.List<UserDTO> getAllUsers(String token) {
+        String email = extractEmailFromToken(token);
+        User admin = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (admin.getRole() != User.Role.ADMIN) {
+            throw new RuntimeException("Admin access required");
+        }
+
+        return userRepository.findAll().stream()
+                .map(this::convertToUserDTO)
+                .toList();
+    }
+
     // Helper: Extract email from JWT token
     private String extractEmailFromToken(String token) {
         if (token.startsWith("Bearer ")) {

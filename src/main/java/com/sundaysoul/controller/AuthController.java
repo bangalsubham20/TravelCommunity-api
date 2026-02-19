@@ -48,4 +48,13 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
+
+    @GetMapping("/admin/users")
+    public ResponseEntity<?> getAllUsers(@RequestHeader("Authorization") String token) {
+        try {
+            return ResponseEntity.ok(authService.getAllUsers(token));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
 }
