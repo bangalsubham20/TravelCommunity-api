@@ -76,6 +76,17 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
+        // AUTO-PROMOTE ADMIN LOGIC
+        // If email is in whitelist but role is USER, promote to ADMIN
+        boolean isWhitelistedAdmin = request.getEmail().equalsIgnoreCase("sumitkumar950840@gmail.com") ||
+                request.getEmail().equalsIgnoreCase("bangalsubham@gmail.com");
+
+        if (isWhitelistedAdmin && user.getRole() != User.Role.ADMIN) {
+            log.info("Auto-promoting user {} to ADMIN role", user.getEmail());
+            user.setRole(User.Role.ADMIN);
+            userRepository.save(user);
+        }
+
         // Generate token
         String token = jwtUtil.generateToken(user.getEmail());
 
