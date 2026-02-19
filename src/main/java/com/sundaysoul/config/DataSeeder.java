@@ -17,12 +17,47 @@ public class DataSeeder implements CommandLineRunner {
         private UserRepository userRepository;
 
         @Autowired
+        private com.sundaysoul.repository.OfferRepository offerRepository;
+
+        @Autowired
         private PasswordEncoder passwordEncoder;
 
         @Override
         public void run(String... args) throws Exception {
                 seedAdmin("bangalsubham@gmail.com", "Admin@Subham", "Subham Bangal");
                 seedAdmin("sumitkumar950840@gmail.com", "Admin@Sumit", "Sumit Kumar");
+                seedOffers();
+        }
+
+        private void seedOffers() {
+                if (offerRepository.count() == 0) {
+                        com.sundaysoul.model.Offer offer1 = com.sundaysoul.model.Offer.builder()
+                                        .code("SUMMER10")
+                                        .description("10% off on Summer Trips")
+                                        .discount(10.0)
+                                        .type(com.sundaysoul.model.Offer.OfferType.PERCENTAGE)
+                                        .minAmount(5000.0)
+                                        .active(true)
+                                        .usageLimit(100)
+                                        .usedCount(0)
+                                        .validUntil(java.time.LocalDate.now().plusMonths(3))
+                                        .build();
+
+                        com.sundaysoul.model.Offer offer2 = com.sundaysoul.model.Offer.builder()
+                                        .code("WELCOME500")
+                                        .description("Flat ₹500 off on first booking")
+                                        .discount(500.0)
+                                        .type(com.sundaysoul.model.Offer.OfferType.FIXED)
+                                        .minAmount(2000.0)
+                                        .active(true)
+                                        .usageLimit(50)
+                                        .usedCount(0)
+                                        .validUntil(java.time.LocalDate.now().plusMonths(6))
+                                        .build();
+
+                        offerRepository.saveAll(java.util.List.of(offer1, offer2));
+                        System.out.println("Seeded sample offers.");
+                }
         }
 
         private void seedAdmin(String email, String password, String fullName) {
