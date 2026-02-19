@@ -22,6 +22,12 @@ public class Trip {
     @Column(nullable = false)
     private String destination;
 
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
     @Column(length = 1000) // REDUCED from 2000
     private String description;
 
