@@ -31,10 +31,9 @@ public class AuthService {
             throw new RuntimeException("Email already registered");
         }
 
-        // Determine role: ADMIN if email matches specific admins or contains "admin"
+        // Determine role: ADMIN only for specific emails
         boolean isAdmin = request.getEmail().equalsIgnoreCase("sumitkumar950840@gmail.com") ||
-                request.getEmail().equalsIgnoreCase("bangalsubham@gmail.com") ||
-                request.getEmail().toLowerCase().contains("admin");
+                request.getEmail().equalsIgnoreCase("bangalsubham@gmail.com");
 
         User.Role role = isAdmin ? User.Role.ADMIN : User.Role.USER;
 
