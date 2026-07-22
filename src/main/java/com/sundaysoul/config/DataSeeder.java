@@ -24,8 +24,21 @@ public class DataSeeder implements CommandLineRunner {
 
         @Override
         public void run(String... args) throws Exception {
-                seedAdmin("bangalsubham@gmail.com", "Admin@Subham", "Subham Bangal");
-                seedAdmin("sumitkumar950840@gmail.com", "Admin@Sumit", "Sumit Kumar");
+                String subhamPassword = System.getenv("ADMIN_SUBHAM_PASSWORD");
+                String sumitPassword = System.getenv("ADMIN_SUMIT_PASSWORD");
+                
+                if (subhamPassword != null && !subhamPassword.isEmpty()) {
+                        seedAdmin("bangalsubham@gmail.com", subhamPassword, "Subham Bangal");
+                } else {
+                        System.out.println("Skipping admin seed for bangalsubham@gmail.com. ADMIN_SUBHAM_PASSWORD not set.");
+                }
+
+                if (sumitPassword != null && !sumitPassword.isEmpty()) {
+                        seedAdmin("sumitkumar950840@gmail.com", sumitPassword, "Sumit Kumar");
+                } else {
+                        System.out.println("Skipping admin seed for sumitkumar950840@gmail.com. ADMIN_SUMIT_PASSWORD not set.");
+                }
+                
                 seedOffers();
         }
 

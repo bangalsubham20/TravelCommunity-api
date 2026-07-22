@@ -132,7 +132,17 @@ public class TripService {
         trip.setPrice(tripDetails.getPrice());
         trip.setDuration(tripDetails.getDuration());
         trip.setDifficulty(tripDetails.getDifficulty());
-        trip.setGroupSize(tripDetails.getGroupSize()); // Added missing field update
+        trip.setGroupSize(tripDetails.getGroupSize());
+        trip.setLatitude(tripDetails.getLatitude());
+        trip.setLongitude(tripDetails.getLongitude());
+        trip.setImage(tripDetails.getImage());
+        trip.setHighlights(tripDetails.getHighlights());
+        trip.setItinerary(tripDetails.getItinerary());
+        trip.setInclusions(tripDetails.getInclusions());
+        trip.setExclusions(tripDetails.getExclusions());
+        trip.setSeason(tripDetails.getSeason());
+        trip.setBestSeason(tripDetails.getBestSeason());
+        trip.setAltitude(tripDetails.getAltitude());
 
         // Recalculate available seats based on new group size and existing bookings
         int bookedCount = 0;
