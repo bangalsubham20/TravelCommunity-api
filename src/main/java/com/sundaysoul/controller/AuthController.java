@@ -43,12 +43,13 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(new ErrorResponse("Email and OTP are required"));
             }
 
-            authService.verifyEmail(targetEmail, targetOtp);
-            return ResponseEntity.ok(new MessageResponse("Email verified successfully"));
+            AuthResponse response = authService.verifyEmail(targetEmail, targetOtp);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
+
 
 
     @GetMapping("/profile")

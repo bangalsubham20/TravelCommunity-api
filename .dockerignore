@@ -8,6 +8,9 @@ mvnw.cmd
 .idea/
 .vscode/
 *.log
+*.ps1
+*.bat
+debug_*
 *.json
 query
 Dockerfile

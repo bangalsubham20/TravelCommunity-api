@@ -2,20 +2,26 @@ package com.sundaysoul.service;
 
 import com.sundaysoul.config.JwtUtil;
 import com.sundaysoul.dto.*;
+import com.sundaysoul.model.PendingUser;
 import com.sundaysoul.model.User;
+import com.sundaysoul.repository.PendingUserRepository;
 import com.sundaysoul.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Slf4j
 public class AuthService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PendingUserRepository pendingUserRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,84 +39,116 @@ public class AuthService {
         );
     }
 
-    // Register new user
+    // Step 1: Initiate registration - save to PendingUser & send OTP email
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
-        log.info("Registering user: {}", request.getEmail());
+        log.info("Registration attempt for email: {}", request.getEmail());
 
-        // Check if user already exists
+        // Check if user already exists in main UserRepository
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
 
+        String otp = generateOtp();
+
+        // Send OTP verification email FIRST before saving pending registration
+        try {
+            emailService.sendVerificationEmail(request.getEmail(), otp);
+        } catch (Exception e) {
+            log.error("Failed to send verification email to {}: {}", request.getEmail(), e.getMessage());
+            throw new RuntimeException("Failed to send verification email. Registration aborted: " + e.getMessage());
+        }
+
+        // Save or update unverified user details in pending_users table (NOT users table)
+        PendingUser pendingUser = pendingUserRepository.findByEmail(request.getEmail())
+                .orElse(new PendingUser());
+
+        pendingUser.setEmail(request.getEmail());
+        pendingUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        pendingUser.setFullName(request.getFullName());
+        pendingUser.setPhone(request.getPhone());
+        pendingUser.setOtp(otp);
+        pendingUser.setOtpExpiry(LocalDateTime.now().plusMinutes(10));
+        pendingUser.setCreatedAt(LocalDateTime.now());
+
+        pendingUserRepository.save(pendingUser);
+
+        return AuthResponse.builder()
+                .message("Verification OTP sent to your email. Please verify OTP to complete registration.")
+                .user(UserDTO.builder()
+                        .name(request.getFullName())
+                        .email(request.getEmail())
+                        .phone(request.getPhone())
+                        .emailVerified(false)
+                        .build())
+                .build();
+    }
+
+    // Step 2: Verify OTP - if successful, create User in database & delete PendingUser
+    @Transactional
+    public AuthResponse verifyEmail(String email, String otp) {
+        // Check if already registered
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email is already verified and registered. Please log in.");
+        }
+
+        // Find pending registration record
+        PendingUser pendingUser = pendingUserRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("No pending registration found for this email. Please register first."));
+
+        // Check OTP expiry
+        if (pendingUser.getOtpExpiry() == null || pendingUser.getOtpExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("OTP has expired. Please register again to receive a new OTP.");
+        }
+
+        // Check OTP match
+        if (!pendingUser.getOtp().equals(otp)) {
+            throw new RuntimeException("Invalid OTP. Please check your verification code.");
+        }
+
         // Determine role: ADMIN only for specific emails
-        boolean isAdmin = request.getEmail().equalsIgnoreCase("sumitkumar950840@gmail.com") ||
-                request.getEmail().equalsIgnoreCase("bangalsubham@gmail.com");
+        boolean isAdmin = email.equalsIgnoreCase("sumitkumar950840@gmail.com") ||
+                email.equalsIgnoreCase("bangalsubham@gmail.com");
 
         User.Role role = isAdmin ? User.Role.ADMIN : User.Role.USER;
 
-        log.info("Creating {} user: {}", role, request.getEmail());
-
-        String otp = generateOtp();
-
-        // Create new user
+        // OTP is valid! NOW create and save the User in the main database
         User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .fullName(request.getFullName())
-                .phone(request.getPhone())
+                .email(pendingUser.getEmail())
+                .password(pendingUser.getPassword())
+                .fullName(pendingUser.getFullName())
+                .phone(pendingUser.getPhone())
                 .bio("Adventure enthusiast! 🌍")
                 .avatar("https://via.placeholder.com/150")
-                .role(role) // Set role based on email
-                .emailVerified(false)
-                .verificationOtp(otp)
-                .otpExpiry(LocalDateTime.now().plusMinutes(10))
+                .role(role)
+                .emailVerified(true)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
 
-        // Send OTP verification email
-        try {
-            emailService.sendVerificationEmail(user.getEmail(), otp);
-        } catch (Exception e) {
-            log.error("Failed to send verification email to {}: {}", user.getEmail(), e.getMessage());
-        }
+        // Remove pending record
+        pendingUserRepository.delete(pendingUser);
+
+        // Generate token for instant login upon verification
+        String token = jwtUtil.generateToken(user.getEmail());
 
         return AuthResponse.builder()
-                .message("Registration successful. Please check your email for verification OTP.")
+                .token(token)
+                .message("Email verified successfully! You are now registered.")
                 .user(convertToUserDTO(user))
                 .build();
-    }
-
-    // Verify email
-    public void verifyEmail(String email, String otp) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (user.isEmailVerified()) {
-            throw new RuntimeException("Email is already verified");
-        }
-
-        if (user.getOtpExpiry() == null ||
-            user.getOtpExpiry().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("OTP has expired");
-        }
-
-        if (!user.getVerificationOtp().equals(otp)) {
-            throw new RuntimeException("Invalid OTP");
-        }
-
-        user.setEmailVerified(true);
-        user.setVerificationOtp(null);
-        user.setOtpExpiry(null);
-
-        userRepository.save(user);
     }
 
     // Login user
     public AuthResponse login(LoginRequest request) {
         log.info("Logging in user: {}", request.getEmail());
+
+        // Check if pending verification exists
+        if (pendingUserRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Please verify your email before signing in");
+        }
 
         // Find user
         User user = userRepository.findByEmail(request.getEmail())
@@ -125,6 +163,7 @@ public class AuthService {
         if (!user.isEmailVerified()) {
             throw new RuntimeException("Please verify your email before signing in");
         }
+
 
         // AUTO-PROMOTE ADMIN LOGIC
         // If email is in whitelist but role is USER, promote to ADMIN
