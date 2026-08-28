@@ -22,6 +22,16 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private EmailService emailService;
+
+    // Utility to generate 6-digit OTP
+    public String generateOtp() {
+        return String.valueOf(
+            java.util.concurrent.ThreadLocalRandom.current().nextInt(100000, 1000000)
+        );
+    }
+
     // Register new user
     public AuthResponse register(RegisterRequest request) {
         log.info("Registering user: {}", request.getEmail());
@@ -39,6 +49,8 @@ public class AuthService {
 
         log.info("Creating {} user: {}", role, request.getEmail());
 
+        String otp = generateOtp();
+
         // Create new user
         User user = User.builder()
                 .email(request.getEmail())
@@ -48,19 +60,51 @@ public class AuthService {
                 .bio("Adventure enthusiast! 🌍")
                 .avatar("https://via.placeholder.com/150")
                 .role(role) // Set role based on email
+                .emailVerified(false)
+                .verificationOtp(otp)
+                .otpExpiry(LocalDateTime.now().plusMinutes(10))
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
 
-        // Generate token
-        String token = jwtUtil.generateToken(user.getEmail());
+        // Send OTP verification email
+        try {
+            emailService.sendVerificationEmail(user.getEmail(), otp);
+        } catch (Exception e) {
+            log.error("Failed to send verification email to {}: {}", user.getEmail(), e.getMessage());
+        }
 
         return AuthResponse.builder()
-                .token(token)
+                .message("Registration successful. Please check your email for verification OTP.")
                 .user(convertToUserDTO(user))
                 .build();
+    }
+
+    // Verify email
+    public void verifyEmail(String email, String otp) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.isEmailVerified()) {
+            throw new RuntimeException("Email is already verified");
+        }
+
+        if (user.getOtpExpiry() == null ||
+            user.getOtpExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("OTP has expired");
+        }
+
+        if (!user.getVerificationOtp().equals(otp)) {
+            throw new RuntimeException("Invalid OTP");
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationOtp(null);
+        user.setOtpExpiry(null);
+
+        userRepository.save(user);
     }
 
     // Login user
@@ -74,6 +118,11 @@ public class AuthService {
         // Verify password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid password");
+        }
+
+        // Check if email is verified
+        if (!user.isEmailVerified()) {
+            throw new RuntimeException("Please verify your email before signing in");
         }
 
         // AUTO-PROMOTE ADMIN LOGIC
@@ -155,7 +204,9 @@ public class AuthService {
                 .bio(user.getBio())
                 .avatar(user.getAvatar())
                 .role(user.getRole().toString())
+                .emailVerified(user.isEmailVerified())
                 .createdAt(user.getCreatedAt())
                 .build();
     }
+
 }

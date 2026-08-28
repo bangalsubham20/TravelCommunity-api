@@ -82,6 +82,7 @@ public class DataSeeder implements CommandLineRunner {
                         user.setRole(User.Role.ADMIN);
                         user.setPassword(passwordEncoder.encode(password));
                         user.setFullName(fullName);
+                        user.setEmailVerified(true);
                         user.setUpdatedAt(LocalDateTime.now());
                         userRepository.save(user);
                         System.out.println("Wait... " + email + " is already an Admin! Updated credentials.");
@@ -92,6 +93,7 @@ public class DataSeeder implements CommandLineRunner {
                                         .fullName(fullName)
                                         .phone("0000000000") // Default placeholder
                                         .role(User.Role.ADMIN)
+                                        .emailVerified(true)
                                         .bio("System Administrator")
                                         .avatar("https://ui-avatars.com/api/?name=" + fullName.replace(" ", "+")
                                                         + "&background=0D9488&color=fff")
@@ -103,4 +105,5 @@ public class DataSeeder implements CommandLineRunner {
                         System.out.println("Admin Created: " + email);
                 }
         }
+
 }

@@ -30,6 +30,27 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String otp,
+            @RequestBody(required = false) VerifyEmailRequest requestBody) {
+        try {
+            String targetEmail = email != null ? email : (requestBody != null ? requestBody.getEmail() : null);
+            String targetOtp = otp != null ? otp : (requestBody != null ? requestBody.getOtp() : null);
+
+            if (targetEmail == null || targetOtp == null) {
+                return ResponseEntity.badRequest().body(new ErrorResponse("Email and OTP are required"));
+            }
+
+            authService.verifyEmail(targetEmail, targetOtp);
+            return ResponseEntity.ok(new MessageResponse("Email verified successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
+
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String token) {
         try {

@@ -39,6 +39,17 @@ public class User {
     @Builder.Default
     private Role role = Role.USER;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean emailVerified = false;
+
+    @Column
+    private String verificationOtp;
+
+    @Column
+    private LocalDateTime otpExpiry;
+
+
     @Column(nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
