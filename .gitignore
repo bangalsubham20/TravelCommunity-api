@@ -32,8 +32,14 @@ build/
 ### VS Code ###
 .vscode/
 
-### Logs ###
+### Logs & Debug Data ###
 *.log
+debug_*.json
+register.json
+trip.json
+query
 
 ### Secrets ###
 .env
+.env.*
+!.env.example

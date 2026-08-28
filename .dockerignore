@@ -3,7 +3,12 @@ target/
 mvnw
 mvnw.cmd
 .env
+.env.*
 .git/
 .idea/
 .vscode/
 *.log
+*.json
+query
+Dockerfile
+README.md
