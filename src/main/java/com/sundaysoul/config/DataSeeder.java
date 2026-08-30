@@ -23,6 +23,9 @@ public class DataSeeder implements CommandLineRunner {
         private com.sundaysoul.repository.TripRepository tripRepository;
 
         @Autowired
+        private com.sundaysoul.repository.FAQRepository faqRepository;
+
+        @Autowired
         private PasswordEncoder passwordEncoder;
 
         @Override
@@ -44,6 +47,7 @@ public class DataSeeder implements CommandLineRunner {
                 
                 seedOffers();
                 seedTrips();
+                seedFAQs();
         }
 
         private void seedOffers() {
@@ -179,8 +183,123 @@ public class DataSeeder implements CommandLineRunner {
                                         .active(true)
                                         .build();
 
-                        tripRepository.saveAll(java.util.List.of(trip1, trip2, trip3, trip4, trip5));
-                        System.out.println("Seeded initial trekking trips into database.");
+                        com.sundaysoul.model.Trip trip6 = com.sundaysoul.model.Trip.builder()
+                                        .name("Ladakh Motorcycle Expedition")
+                                        .destination("Leh Ladakh, India")
+                                        .description("Ride through the world's highest motorable passes including Khardung La and Chang La.")
+                                        .price(28500.0)
+                                        .duration(9)
+                                        .startDate(LocalDateTime.now().plusDays(18))
+                                        .endDate(LocalDateTime.now().plusDays(27))
+                                        .groupSize(12)
+                                        .difficulty("Challenging")
+                                        .season("Biking")
+                                        .altitude("18,380 ft")
+                                        .availableSeats(8)
+                                        .image("https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Khardung La, Pangong Tso Lake, Nubra Valley Quad Biking")
+                                        .rating(4.9)
+                                        .reviews(142)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip7 = com.sundaysoul.model.Trip.builder()
+                                        .name("Meghalaya Caving & Waterfalls")
+                                        .destination("Shillong, Meghalaya")
+                                        .description("Explore living root bridges, crystal clear rivers, and deepest natural caves in East Asia.")
+                                        .price(16500.0)
+                                        .duration(6)
+                                        .startDate(LocalDateTime.now().plusDays(8))
+                                        .endDate(LocalDateTime.now().plusDays(14))
+                                        .groupSize(14)
+                                        .difficulty("Moderate")
+                                        .season("Backpacking")
+                                        .altitude("4,900 ft")
+                                        .availableSeats(10)
+                                        .image("https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Nohkalikai Falls, Cherrapunji, Living Root Bridge Cliff Jump")
+                                        .rating(4.9)
+                                        .reviews(78)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip8 = com.sundaysoul.model.Trip.builder()
+                                        .name("Bali Tropical All-Girls Getaway")
+                                        .destination("Bali, Indonesia")
+                                        .description("An exclusive all-girls tropical escape across Ubud rice terraces, Nusa Penida beaches, and sunset clubs.")
+                                        .price(45000.0)
+                                        .duration(7)
+                                        .startDate(LocalDateTime.now().plusDays(25))
+                                        .endDate(LocalDateTime.now().plusDays(32))
+                                        .groupSize(10)
+                                        .difficulty("Easy")
+                                        .season("All Girls")
+                                        .altitude("1,500 ft")
+                                        .availableSeats(6)
+                                        .image("https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Nusa Penida Kelingking Beach, Ubud Jungle Swing, Tanah Lot Sunset")
+                                        .rating(5.0)
+                                        .reviews(98)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip9 = com.sundaysoul.model.Trip.builder()
+                                        .name("Kasol & Kheerganga Weekend Escape")
+                                        .destination("Kasol, Himachal Pradesh")
+                                        .description("Unwind in Parvati Valley with hot sulfur springs and riverside acoustic music sessions.")
+                                        .price(6500.0)
+                                        .duration(3)
+                                        .startDate(LocalDateTime.now().plusDays(3))
+                                        .endDate(LocalDateTime.now().plusDays(6))
+                                        .groupSize(18)
+                                        .difficulty("Easy to Moderate")
+                                        .season("Weekend")
+                                        .altitude("9,700 ft")
+                                        .availableSeats(12)
+                                        .image("https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Kheerganga Hot Springs, Cafe Hopping in Kasol, Manikaran Sahib")
+                                        .rating(4.8)
+                                        .reviews(156)
+                                        .active(true)
+                                        .build();
+
+                        tripRepository.saveAll(java.util.List.of(trip1, trip2, trip3, trip4, trip5, trip6, trip7, trip8, trip9));
+                        System.out.println("Seeded comprehensive database trips across all categories.");
+                }
+        }
+
+        private void seedFAQs() {
+                if (faqRepository.count() == 0) {
+                        com.sundaysoul.model.FAQ faq1 = com.sundaysoul.model.FAQ.builder()
+                                        .question("How do I book a trip on SundaySoul?")
+                                        .answer("You can browse trips, select your preferred travel dates, click 'Book Now', and complete the instant verification checkout.")
+                                        .category("Booking")
+                                        .order(1)
+                                        .build();
+
+                        com.sundaysoul.model.FAQ faq2 = com.sundaysoul.model.FAQ.builder()
+                                        .question("What safety measures are taken during high-altitude treks?")
+                                        .answer("All our treks are led by Wilderness First Responder certified captains with oxygen cylinders, pulse oximeters, and first aid kits.")
+                                        .category("Safety")
+                                        .order(2)
+                                        .build();
+
+                        com.sundaysoul.model.FAQ faq3 = com.sundaysoul.model.FAQ.builder()
+                                        .question("What is the cancellation policy?")
+                                        .answer("Cancellations made 15 days before the trip start date receive a 100% full refund or credit voucher valid for 1 year.")
+                                        .category("Cancellation")
+                                        .order(3)
+                                        .build();
+
+                        com.sundaysoul.model.FAQ faq4 = com.sundaysoul.model.FAQ.builder()
+                                        .question("Are all-girls trips safe for solo female travelers?")
+                                        .answer("Yes! Our All-Girls trips feature verified female tour leads, vetted accommodations, and 24/7 dedicated support.")
+                                        .category("Safety")
+                                        .order(4)
+                                        .build();
+
+                        faqRepository.saveAll(java.util.List.of(faq1, faq2, faq3, faq4));
+                        System.out.println("Seeded FAQs into database.");
                 }
         }
 
