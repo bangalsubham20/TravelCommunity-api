@@ -20,6 +20,9 @@ public class DataSeeder implements CommandLineRunner {
         private com.sundaysoul.repository.OfferRepository offerRepository;
 
         @Autowired
+        private com.sundaysoul.repository.TripRepository tripRepository;
+
+        @Autowired
         private PasswordEncoder passwordEncoder;
 
         @Override
@@ -40,6 +43,7 @@ public class DataSeeder implements CommandLineRunner {
                 }
                 
                 seedOffers();
+                seedTrips();
         }
 
         private void seedOffers() {
@@ -70,6 +74,113 @@ public class DataSeeder implements CommandLineRunner {
 
                         offerRepository.saveAll(java.util.List.of(offer1, offer2));
                         System.out.println("Seeded sample offers.");
+                }
+        }
+
+        private void seedTrips() {
+                if (tripRepository.count() == 0) {
+                        com.sundaysoul.model.Trip trip1 = com.sundaysoul.model.Trip.builder()
+                                        .name("Manali Trek Expedition")
+                                        .destination("Manali, Himachal Pradesh")
+                                        .description("A perfect guide to your snow peak adventures through pine forests and alpine meadows.")
+                                        .price(14500.0)
+                                        .duration(7)
+                                        .startDate(LocalDateTime.now().plusDays(10))
+                                        .endDate(LocalDateTime.now().plusDays(17))
+                                        .groupSize(15)
+                                        .difficulty("Moderate")
+                                        .season("Winter")
+                                        .altitude("12,500 ft")
+                                        .availableSeats(10)
+                                        .image("https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Snow trail walking, Starlit camping, Solang Valley View")
+                                        .rating(5.0)
+                                        .reviews(70)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip2 = com.sundaysoul.model.Trip.builder()
+                                        .name("Sikkim Kanchenjunga Trek")
+                                        .destination("Sikkim, India")
+                                        .description("Get up close to Mt. Kanchenjunga through rhododendron forests and sacred alpine lakes.")
+                                        .price(18200.0)
+                                        .duration(7)
+                                        .startDate(LocalDateTime.now().plusDays(15))
+                                        .endDate(LocalDateTime.now().plusDays(22))
+                                        .groupSize(12)
+                                        .difficulty("Challenging")
+                                        .season("Summit")
+                                        .altitude("15,100 ft")
+                                        .availableSeats(8)
+                                        .image("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Kanchenjunga View, Samiti Lake, Rhododendron Forest")
+                                        .rating(4.9)
+                                        .reviews(85)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip3 = com.sundaysoul.model.Trip.builder()
+                                        .name("Snow Peak Manali Expedition")
+                                        .destination("Manali, Himachal Pradesh")
+                                        .description("High altitude snow peak trek with certified wilderness experts and mountain gear.")
+                                        .price(16800.0)
+                                        .duration(7)
+                                        .startDate(LocalDateTime.now().plusDays(20))
+                                        .endDate(LocalDateTime.now().plusDays(27))
+                                        .groupSize(15)
+                                        .difficulty("Moderate")
+                                        .season("Winter")
+                                        .altitude("13,800 ft")
+                                        .availableSeats(12)
+                                        .image("https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("High altitude snow trail, Panoramic Himalayan view, Camping")
+                                        .rating(5.0)
+                                        .reviews(92)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip4 = com.sundaysoul.model.Trip.builder()
+                                        .name("Kedarkantha Summit Trek")
+                                        .destination("Uttarakhand, India")
+                                        .description("Walk through pine forests and snow trails to reach a breathtaking 360-degree Himalayan summit.")
+                                        .price(12900.0)
+                                        .duration(6)
+                                        .startDate(LocalDateTime.now().plusDays(5))
+                                        .endDate(LocalDateTime.now().plusDays(11))
+                                        .groupSize(20)
+                                        .difficulty("Beginner")
+                                        .season("Summit")
+                                        .altitude("12,500 ft")
+                                        .availableSeats(15)
+                                        .image("https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Snow trail walking, Starlit camping, Summit Sunrise")
+                                        .rating(4.9)
+                                        .reviews(110)
+                                        .active(true)
+                                        .build();
+
+                        com.sundaysoul.model.Trip trip5 = com.sundaysoul.model.Trip.builder()
+                                        .name("Spiti Valley Cold Desert Trek")
+                                        .destination("Himachal Pradesh, India")
+                                        .description("Experience ancient monasteries, high altitude lakes, and dramatic canyon landscapes.")
+                                        .price(22000.0)
+                                        .duration(8)
+                                        .startDate(LocalDateTime.now().plusDays(12))
+                                        .endDate(LocalDateTime.now().plusDays(20))
+                                        .groupSize(10)
+                                        .difficulty("Moderate")
+                                        .season("Camping")
+                                        .altitude("14,000 ft")
+                                        .availableSeats(6)
+                                        .image("https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=800&auto=format&fit=crop")
+                                        .highlights("Key Monastery, Chandratal Lake, High Passes")
+                                        .rating(4.8)
+                                        .reviews(64)
+                                        .active(true)
+                                        .build();
+
+                        tripRepository.saveAll(java.util.List.of(trip1, trip2, trip3, trip4, trip5));
+                        System.out.println("Seeded initial trekking trips into database.");
                 }
         }
 
